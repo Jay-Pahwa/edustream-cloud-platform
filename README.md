@@ -30,7 +30,7 @@ An end-to-end cloud-native video streaming and educational platform engineered w
 
 
 
-## 📂 Repository Structure
+##  Repository Structure
 
 ```text
 ├── edustream-master/
