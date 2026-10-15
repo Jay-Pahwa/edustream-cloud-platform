@@ -24,6 +24,10 @@ An end-to-end cloud-native video streaming and educational platform engineered w
 
 ## 🏗️ System Architecture
 
+<p align="center">
+  <img src="assets/architecture.png" alt="EduStream Architecture Diagram" width="100%">
+</p>
+
 ```text
                                   +------------------------------------+
                                   |            Internet                |
