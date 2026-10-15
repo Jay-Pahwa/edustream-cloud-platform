@@ -1,0 +1,36 @@
+# Terraform local state, cache, and provider plugins
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+crash.log
+override.tf
+override.tf.json
+
+# Python caches & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.env
+venv/
+.venv/
+env/
+ENV/
+
+# Large media files (prevents pushing bulky video binaries to GitHub)
+*.mp4
+*.mkv
+*.avi
+
+# Editor and IDE configurations
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db

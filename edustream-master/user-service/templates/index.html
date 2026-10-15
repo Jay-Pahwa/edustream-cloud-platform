@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+
+<div class="text-center mb-5">
+    <h1 class="display-4">Welcome to EduStream</h1>
+    <p class="lead">Your platform for scalable video-on-demand, powered by AWS & DevOps.</p>
+</div>
+
+<h2 class="mb-4">Available Subjects</h2>
+<div class="row">
+    {% for subject in subjects %}
+    <div class="col-md-6 mb-4">
+        <div class="card video-card">
+            <img src="{{ subject.image_url }}" class="card-img-top" alt="{{ subject.name }}">
+            <div class="card-body">
+                <h5 class="card-title">{{ subject.name }}</h5>
+                <p class="card-text">{{ subject.description }}</p>
+                <a href="{{ url_for('subject_page', subject_id=subject.id) }}" class="btn btn-primary">View Courses</a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <p>No subjects are available at this time.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

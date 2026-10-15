@@ -1,0 +1,184 @@
+{% extends "layout.html" %}
+{% block title %}{{ video.title }} - EduStream{% endblock %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('subject_page', subject_id=video.subject_id) }}">{{ video.subject.name }}</a></li>
+                    <li class="breadcrumb-item active">{{ video.title }}</li>
+                </ol>
+            </nav>
+
+            <!-- Video Player Card -->
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white">
+                    <h2 class="card-title mb-0">
+                        <i class="bi bi-play-circle-fill text-primary me-2"></i>
+                        {{ video.title }}
+                    </h2>
+                    <small class="text-muted">From: {{ video.subject.name }}</small>
+                </div>
+                
+                <div class="card-body p-0">
+                    {% if video_url %}
+                    <!-- Video Player -->
+                    <div class="ratio ratio-16x9 bg-dark">
+                        <video 
+                            controls 
+                            controlsList="nodownload"
+                            class="w-100"
+                            style="background-color: #000;"
+                            poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQ1MCIgdmlld0JveD0iMCAwIDgwMCA0NTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNDUwIiBmaWxsPSIjMEEwQTBBIi8+CjxwYXRoIGQ9Ik0zNjAgMjI1TDMxMCAyMDBMMzEwIDI1MEwzNjAgMjI1WiIgZmlsbD0iI0ZGRkZGRiIvPgo8dGV4dCB4PSI0MDAiIHk9IjI0MCIgZmlsbD0iI0ZGRkZGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjI0Ij5Mb2FkaW5nIFZpZGVvLi4uPC90ZXh0Pgo8L3N2Zz4K"
+                        >
+                            <source src="{{ video_url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <!-- Success Message -->
+                    <div class="p-3 bg-light border-top">
+                        <div class="alert alert-success mb-0">
+                            <i class="bi bi-cloud-check me-2"></i>
+                            <strong>✅ Streaming from AWS S3</strong>
+                            <br>
+                            <small>File: {{ video.s3_key }} | 
+                            <a href="{{ video_url }}" target="_blank" class="text-decoration-none">Open Direct Link</a></small>
+                        </div>
+                    </div>
+                    {% else %}
+                    <!-- Error State -->
+                    <div class="text-center py-5 bg-light">
+                        <i class="bi bi-exclamation-triangle display-1 text-warning"></i>
+                        <h4 class="mt-3 text-muted">Video Not Available</h4>
+                        <p class="text-muted">The video file was not found in S3 storage.</p>
+                        <div class="mt-3">
+                            <a href="{{ url_for('subject_page', video_id=video.subject_id) }}" class="btn btn-primary">
+                                <i class="bi bi-arrow-left me-2"></i>Back to Course
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Quick Test Section -->
+            {% if video_url %}
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-wrench me-2"></i>Troubleshooting
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p>If the video doesn't play above, try these steps:</p>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Test Direct Link:</h6>
+                            <a href="{{ video_url }}" target="_blank" class="btn btn-success w-100 mb-2">
+                                <i class="bi bi-box-arrow-up-right me-2"></i>Open in New Tab
+                            </a>
+                            <small class="text-muted">This should open and play the video directly.</small>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h6>Refresh Video:</h6>
+                            <button onclick="refreshVideo()" class="btn btn-outline-primary w-100 mb-2">
+                                <i class="bi bi-arrow-clockwise me-2"></i>Reload Video
+                            </button>
+                            <small class="text-muted">Reloads the video player.</small>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="mt-3">
+                        <h6>Debug Information:</h6>
+                        <div class="bg-dark text-light p-3 rounded">
+                            <small>
+                                <strong>Video URL:</strong> {{ video_url }}<br>
+                                <strong>S3 Key:</strong> {{ video.s3_key }}<br>
+                                <strong>Bucket:</strong> edustream-videos-jayal-1029<br>
+                                <strong>Status:</strong> <span id="videoStatus">Loading...</span>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+// Video status monitoring
+function updateVideoStatus() {
+    const video = document.querySelector('video');
+    const statusElement = document.getElementById('videoStatus');
+    
+    if (video) {
+        video.addEventListener('loadstart', () => {
+            statusElement.textContent = 'Loading video...';
+            statusElement.style.color = 'orange';
+        });
+        
+        video.addEventListener('canplay', () => {
+            statusElement.textContent = 'Ready to play - click play button';
+            statusElement.style.color = 'green';
+        });
+        
+        video.addEventListener('error', (e) => {
+            statusElement.textContent = 'Error loading video';
+            statusElement.style.color = 'red';
+            console.error('Video error:', e);
+        });
+        
+        video.addEventListener('stalled', () => {
+            statusElement.textContent = 'Video stalled - buffering...';
+            statusElement.style.color = 'orange';
+        });
+    }
+}
+
+// Refresh video function
+function refreshVideo() {
+    const video = document.querySelector('video');
+    if (video) {
+        video.load();
+        document.getElementById('videoStatus').textContent = 'Reloading...';
+        document.getElementById('videoStatus').style.color = 'orange';
+    }
+}
+
+// Auto-play when user interacts (fix for browser restrictions)
+document.addEventListener('click', function() {
+    const video = document.querySelector('video');
+    if (video && video.paused) {
+        video.play().catch(e => {
+            console.log('Auto-play prevented, user interaction required');
+        });
+    }
+});
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    updateVideoStatus();
+    
+    // Try to auto-play after a short delay
+    setTimeout(() => {
+        const video = document.querySelector('video');
+        if (video) {
+            video.play().catch(e => {
+                console.log('Auto-play blocked by browser');
+            });
+        }
+    }, 1000);
+});
+</script>
+
+{% endblock %}
