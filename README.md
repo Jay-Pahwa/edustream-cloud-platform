@@ -1,4 +1,4 @@
-# 🎬 EduStream — Cloud-Native Video Streaming Platform
+#  EduStream — Cloud-Native Video Streaming Platform
 
 ![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
 ![Terraform](https://img.shields.io/badge/Terraform-844FBA?style=for-the-badge&logo=terraform&logoColor=white)
@@ -12,7 +12,7 @@ An end-to-end cloud-native video streaming and educational platform engineered w
 
 ---
 
-## 🌟 Key Features
+##  Key Features
 
 - **Microservices Architecture**: Decoupled user-facing streaming and backend video ingestion into independent containerized services.
 - **High Availability & Fault Tolerance**: Multi-Availability Zone deployment on AWS utilizing public, web, and data subnets.
@@ -22,49 +22,13 @@ An end-to-end cloud-native video streaming and educational platform engineered w
 
 ---
 
-## 🏗️ System Architecture
+##  System Architecture
 
 <p align="center">
   <img src="assets/architecture.png" alt="EduStream Architecture Diagram" width="100%">
 </p>
 
-```text
-                                  +------------------------------------+
-                                  |            Internet                |
-                                  +-----------------+------------------+
-                                                    |
-                                                    v
-                                      +-------------+------------+
-                                      |     Internet Gateway     |
-                                      +-------------+------------+
-                                                    |
-                     +------------------------------+------------------------------+
-                     |                                                             |
-        [ Public Subnet A (AZ-1) ]                                    [ Public Subnet B (AZ-2) ]
-        +------------------------+                                    +------------------------+
-        |     NAT Gateway A      |                                    |     NAT Gateway B      |
-        | Application Load Bal.  |                                    |                        |
-        +------------+-----------+                                    +------------+-----------+
-                     |                                                             |
-                     +------------------------------+------------------------------+
-                                                    |
-                     +------------------------------+------------------------------+
-                     |                                                             |
-        [ Web Subnet A (AZ-1) ]                                       [ Web Subnet B (AZ-2) ]
-        +------------------------+                                    +------------------------+
-        |  Docker: User-Service  |                                    | Docker: Uploader-Svc   |
-        |       (Port 8082)      |                                    |       (Port 8081)      |
-        +------------+-----------+                                    +------------+-----------+
-                     |                                                             |
-                     +------------------------------+------------------------------+
-                                                    |
-                                      [ Data Subnets (Private) ]
-                                      +------------------------+
-                                      | Amazon RDS MySQL & S3  |
-                                      +------------------------+
-```
 
----
 
 ## 📂 Repository Structure
 
@@ -95,7 +59,7 @@ An end-to-end cloud-native video streaming and educational platform engineered w
 
 ---
 
-## ⚙️ CI/CD Pipeline Flow (Jenkins)
+## CI/CD Pipeline Flow (Jenkins)
 
 The included `Jenkinsfile` orchestrates the complete lifecycle:
 1. **Checkout Code**: Pulls the latest commits from the repository.
@@ -106,7 +70,7 @@ The included `Jenkinsfile` orchestrates the complete lifecycle:
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Option A: Run Services Locally via Docker
 
@@ -159,7 +123,7 @@ The included `Jenkinsfile` orchestrates the complete lifecycle:
 
 ---
 
-## 🛡️ Security & Best Practices
+## Security & Best Practices
 
 - **Zero Credentials in Code**: Database passwords, AWS access keys, and IAM credentials are dynamically injected via environment variables and IAM instance profiles.
 - **Isolated Network Layers**: Application containers and RDS databases reside inside private subnets without direct public internet exposure.
